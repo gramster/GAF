@@ -1,0 +1,29 @@
+(cd gaflib^make lib^cd \games^cd gamelib^make lib^cd \games )
+NCD, Norton Utilities 6.0, Copyright 1991 by Symantec Corporation
+
+Changing to C:\GRAM\GAMES\XXX\GAFLIB
+NCD, Norton Utilities 6.0, Copyright 1991 by Symantec Corporation
+
+Changing to C:\
+NCD, Norton Utilities 6.0, Copyright 1991 by Symantec Corporation
+
+Changing to C:\GRAM\GAMES\XXX\GAMELIB
+NCD, Norton Utilities 6.0, Copyright 1991 by Symantec Corporation
+
+Changing to C:\
+Deleting d:\tmp\mk012101.err
+     1 file(s) deleted
+bcc -c -v -ls -DDEBUG -O -Iinclude -ml go.cpp
+Borland C++  Version 3.1 Copyright (c) 1992 Borland International
+go.cpp:
+Error go.cpp 1207: Declaration terminated incorrectly in function go_t::ApplyMove(board_t * &,move_t *,int,int,moverecord_t *)
+Error go.cpp 1208: 'Captures' is not a member of 'move_t' in function go_t::ApplyMove(board_t * &,move_t *,int,int,moverecord_t *)
+Error go.cpp 1208: Expression syntax in function go_t::ApplyMove(board_t * &,move_t *,int,int,moverecord_t *)
+Error go.cpp 1209: Could not find a match for 'moverecord_t::moverecord_t(moverecord_t *)' in function go_t::ApplyMove(board_t * &,move_t *,int,int,moverecord_t *)
+Warning go.cpp 1392: Array size for 'delete' ignored in function go_t::FindChains(gridboard_t &)
+Warning go.cpp 1393: Array size for 'delete' ignored in function go_t::FindChains(gridboard_t &)
+*** 4 errors in Compile ***
+
+        Available memory 3707988
+
+*** Error code 1

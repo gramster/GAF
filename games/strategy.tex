@@ -1,0 +1,147 @@
+GnuGo
+=====
+
+FindOpen (attack)
+--------
+This recursively explores around a group of pieces, stopping
+when an opponent piece or empty square is found. In the latter
+case, if this is not a previous KO square, the square is saved in
+a vector. If the vector count reaches the liberty count of the 
+group (which should imply all open squares found), FindOpen returns 1.
+
+FindNextMove (defense)
+------------
+   This recurses around a group, finding empty squares and computing
+   the effect playing here has on the liberty of the group. The move
+   which has the best positive effect is selected, but only saved if
+   it exceeds the current best move weight. If the groups liberties
+   were only one this move is returned as the chosen move.
+
+   The weight is calculated with the formula:
+       (40 + ((newlib-oldlib) - 1) * 50 / (oldlib * oldlib * oldlib));
+      
+GenMove
+-------
+FindAttack
+   For each opponent piece with liberty less than four
+      cnt = 0
+      Find the pieces giving opponent liberty (vector tr,tc)
+      if opponent group has only one liberty and val<120
+         (r,c,val) = (tr[0],tr[0],120)
+      else 
+	 for u = 0 .. liberties
+	    for v = 0 .. liberties
+	       if (u != v)
+	          if liberties of (tr[u],tc[u]) not zero
+                     apply move, find resulting liberties of (tr[v],tc[v])
+                        (i.e. liberties of group if opponent plays this)
+                     reject move if my liberty one and opponent's non-zero
+                     else value = 120 - 20 * opponent liberties
+                     if this is a new high value, save (tr[u],tc[u])
+                     undo applied move
+
+FindDefense
+   loop thru liberties from 1 to 3
+      for each of my pieces with that number of liberties
+         if FindNextMove returns a higher value
+            save the returned move
+
+FindPattern
+   This applies a game tree for openings if in the first few moves,
+   otherwise it searches the board for matches of a pattern database
+   and uses these to choose a move.
+
+Random move, avoiding edges and center, liberty one, fioe and suicide.
+
+==========================================================
+Go Explorer
+===========
+
+Identify BLOCKS (strongly connected pieces)
+Identify CHAINS (blocks connected on diagonals where both adjacent
+	nodes are empty or suicide for opponent)
+Compute INFLUENCE of each chain
+Use influence and chains to determine GROUPS of allied chains
+	(essentially blocks of influence)
+Determine group strength and size
+Compare for each player.
+
+====================================================================
+AmiGo
+=====
+The following are tried in order:
+
+	takeCorner(x, y)
+	lookForSave(x, y)
+	lookForSaveN(x, y)
+	extend(x, y)
+	lookForKill(x, y)
+	doubleAtari(x, y)
+	lookForAttack(x, y)
+	threaten(x, y)
+	extend2(x, y)
+	connectCut(x, y)
+	blockCut(x, y)
+	cutHim(x, y)
+	extendWall(x, y)
+	findAttack2(x, y)
+	atariAnyway(x, y)
+	underCut(x, y)
+	dropToEdge(x, y)
+	pushWall(x, y)
+	reduceHisLiberties(x, y)
+	dropToEdge2(x, y)
+ 
+======================================================================
+My Ideas
+
+Each block is associated with a strength (number of liberties)
+and value (dependent on area enclosed).
+We want to reduce the number of chains, I think, but shouldn't
+necessarily do the same (or opposite) with blocks.
+
+A block (chain?) with two eyes is (temporarily) invincible. 
+If not, control over a region is determined by ignoring blocks
+that are adjacent to stronger enemy blocks (unless those blocks
+are part of a chain). Something like:
+
+	for each chain
+		determine nearby attacking enemy chains
+		determine nearby defending chains
+		determine fate of chain based on this.
+
+The remaining blocks are then used to determine value based on
+increasing territory and strength, and weakening the opponents.
+
+
+Basically we want to identify blocks, and associate each block
+with a influence (dependent on number of liberties), 
+Basic shape analysis:
+
+Lines
+=====
+These are as strong as their number of liberties. Their
+value depends on whether they enclose any territory,
+and if so, what size. The overall value of a line
+could be the sum of the influence on the enclosed
+territory. Extending a line can add at most two
+liberties; it cannot reduce the number of liberties.
+In fact, line extension is the optimal extension for
+increasing block liberties (other than making eyes or connecting
+to another block).
+
+Diagonals   O
+=========  O
+
+Each stone retains all four liberties, but a single enemy
+stone can reduce each stone's number of liberties. However,
+as long as both common adjacent neighbours are empty, the
+two can be connected and used to save each other from capture.
+
+Triangles   O
+=========   OO
+
+The smallest non-linear block.
+Note that this has seven liberties (one less than a line).
+
+	

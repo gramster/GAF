@@ -1,0 +1,66 @@
+BUGS
+
+With current basic move generator lookahead is useless in go!
+
+THINGS TO DO
+
+Buttons, scrollboxes and dialog boxes for load/save. 
+Implement some of the move generators used in amigo.
+The move list must be efficiently indexed as the list may be long!
+Profile and optimise - getting very slow!!
+Improve dead as they stand removal, and turf count (check amigo
+for alternative approach to latter problem).
+Improve weight functions in games that just use win/lose/draw.
+Make the default level an argument to game constructors.
+Checkers?
+Nine men's morris?
+False eyes
+
+NOTES
+
+Lookahead problems:
+	patterns mcnt/mtype
+
+Patterns seem to increase captures but decrease turf; net result
+is a loss.
+
+Write a readable summary of the algorithms used in GnuGo, AmiGo,
+and SmartGo, and use this as a basis for extensions.
+
+Generalise the move generators so that there is an orthogonal
+move generator which only validates that the destination is on
+the board. Checking for empty or other attributes of the destination
+must only be done in subclasses. This allows subclasses allowing
+takes and disallowing them.
+Also, make a diagonal class. The king class must combine the
+ortho and diagonal classes. Both of those classes can be extended
+with a range, to implement bishop/rook classes.
+
+ie something like:
+    gen
+	placegen
+	    bishop(range, cantake)
+	    rook(range, cantake)
+	    knight(cantake)
+	    king(tk) = bishop(1, tk)+rook(1, tk)
+            pawn = bishop(1,1)+rook(1,0) plus additional constraints
+	    queen(tk) = bishop(cols,tk)+rook(cols,tk)
+
+Note the the bishop and rook generators stop at the first non-empty
+square along each rank/file/diagonal. Whether that square is returned
+depends on the cantake flag (which actually is a flag to the move
+checker; there should be two bishop classes etc).
+
+Game.* shouldn't change except maybe the HUMAN/COMPUTER/EMPTY
+confusion should be cleared up by introducing an enumeration
+player_t. Must then change all the 3-player things!
+
+Make the whole thing script/table-driven? Try spec a few games in this
+form for feasability. Can specify a local slide move with allowed
+directions and conditions. Predefine chess moves as such (actually
+use (x-off, y-off, dest-condition)).
+
+
+
+
+
